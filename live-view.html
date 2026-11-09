@@ -111,6 +111,32 @@ video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
 #board .brow.empty .nm{color:#4f6d88;font-weight:600;font-size:17px}
 #board .bfoot{margin-top:12px;padding:7px 12px;border-radius:9px;background:rgba(255,190,60,.12);border:1px dashed rgba(255,206,84,.5);color:#ffe3a6;font:700 17px/1.35 'Microsoft YaHei',sans-serif;text-align:center;white-space:nowrap}
 #board .bfoot b{color:#ff8a3d;font-size:19px}
+#feed{position:fixed;right:26px;bottom:270px;z-index:3;width:470px;padding:12px 18px 10px;background:linear-gradient(135deg,rgba(10,20,32,.9),rgba(6,10,18,.84));border:2px solid rgba(122,210,255,.4);border-radius:16px;box-shadow:0 0 30px rgba(0,150,255,.16),inset 0 0 24px rgba(120,220,255,.05);pointer-events:auto;cursor:move;touch-action:none;user-select:none;font-family:'Microsoft YaHei',sans-serif}
+#feed.dragging{opacity:.82}
+#feed .fh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+#feed .fh b{font:800 24px/1.2 'Microsoft YaHei',sans-serif;color:#eaf9ff;letter-spacing:1px}
+#feed .fh b i{font-style:normal;margin-right:7px;color:#74e8ff}
+#feed .fh span{font:700 15px/1 'Microsoft YaHei',sans-serif;color:#54ffc8;display:flex;align-items:center;gap:6px}
+#feed .fh span::before{content:'';width:9px;height:9px;border-radius:50%;background:#54ffc8;box-shadow:0 0 10px #54ffc8;animation:guidePulse 1.4s ease-in-out infinite}
+#feed.off .fh span{color:#8b98a9}
+#feed.off .fh span::before{background:#8b98a9;box-shadow:none;animation:none}
+#feed .fl{display:flex;flex-direction:column;min-height:190px;justify-content:flex-end}
+#feed .fi{display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid rgba(122,210,255,.1);min-height:38px}
+#feed .fi:last-child{border-bottom:0}
+#feed .fi.fresh{animation:feedIn .34s cubic-bezier(.2,1.4,.4,1)}
+@keyframes feedIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+#feed .k{flex:none;padding:1px 9px;border-radius:999px;font:700 14px/1.6 'Microsoft YaHei',sans-serif}
+#feed .k.join{background:rgba(84,255,200,.14);border:1px solid rgba(84,255,200,.34);color:#8ff3d8}
+#feed .k.comment{background:rgba(122,210,255,.12);border:1px solid rgba(122,210,255,.32);color:#bfeaff}
+#feed .k.gift{background:rgba(255,190,60,.14);border:1px solid rgba(255,206,84,.48);color:#ffe3a6}
+#feed .k.follow{background:rgba(255,140,180,.14);border:1px solid rgba(255,150,190,.42);color:#ffc9dc}
+#feed .nm{flex:1;min-width:0;font:700 20px/1.35 'Microsoft YaHei',sans-serif;color:#e7f6ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#feed .gd{flex:none;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 16px/1.3 'Microsoft YaHei',sans-serif;color:#ffd76a}
+#feed .tm{flex:none;font:600 15px/1 ui-monospace,Consolas,monospace;color:#5f7f9a}
+#feed .fi.empty{justify-content:center;border-bottom:0;color:#4f6d88;font:600 17px/1.4 'Microsoft YaHei',sans-serif}
+#feed .ff{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(122,210,255,.14);font:600 15px/1.3 'Microsoft YaHei',sans-serif;color:#9fe8ff;white-space:nowrap}
+#feed .ff .clock{font:700 19px/1 ui-monospace,Consolas,monospace;color:#efffff;letter-spacing:1px}
+#feed .ai{margin-top:5px;font:600 12px/1.4 'Microsoft YaHei',sans-serif;color:#7f93a8;letter-spacing:.4px}
 </style><link rel="stylesheet" href="assets/live-rules.css"></head><body>
 <div id="hint"><div>⏳ 等待主窗口直播画面…</div><div style="font-size:12px">请保持主窗口（打印台）开启且不要最小化<br><a id="fallback" href="/index.html?scene=1" style="display:none">镜像不可用？点此用独立渲染窗口打开</a></div></div>
 <video id="v" autoplay playsinline muted></video>
@@ -122,6 +148,7 @@ video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
 <div id="done"><span class="spark" style="left:18px;top:-10px">✦</span><span class="spark" style="right:26px;top:8px">✦</span><span class="spark" style="right:70px;bottom:-14px">✦</span><span class="spark" style="left:60px;bottom:-6px">✦</span><img id="done-avatar" alt=""><div class="txt"><b id="done-name"></b><span>3D 头像已完成</span><small id="done-score"></small><small id="done-town" class="tline"></small></div></div>
 <div id="town"><div class="th"><b><i>◈</i>头像小镇</b><span id="town-count">0 位居民</span></div><div class="sub" id="town-sub">每位观众的头像都会住进来</div><div class="how">评论 <b>888</b> · 打印完成自动编号入住</div><div class="grid" id="town-grid"></div></div>
 <div id="board" class="idle"><div class="bh"><b><i>▣</i>排队大屏</b><span>实时</span></div><div class="bnow"><div class="bav"><img id="board-cur-av" alt=""><span class="bdot"></span></div><div class="btxt"><small id="board-cur-label">打印台空闲</small><b id="board-cur-name">等待下一位观众</b><span id="board-cur-state">评论 888 即可加入</span></div></div><div class="bprog"><i></i></div><div class="bmeta"><span>排队 <b id="board-queue">0</b> 位</span><span id="board-eta">—</span><span>今日已完成 <b id="board-today">0</b></span></div><div class="bsec">接下来<small>最近 3 位</small></div><div id="board-next"></div><div class="bsec">打印排行榜<small>今日次数</small></div><div id="board-top"></div><div class="bfoot">评论 <b>888</b> · 免费打印 3D 头像</div></div>
+<div id="feed" class="off"><div class="fh"><b><i>◉</i>实时互动</b><span id="feed-live">本地演示</span></div><div class="fl" id="feed-list"></div><div class="ff"><span id="feed-stat">本场第 0 件</span><span class="clock" id="feed-clock">--:--:--</span></div><div class="ai">AI 语音播报 · 程序实时渲染</div></div>
 <div id="interaction" tabindex="0" aria-label="左键旋转，右键平移，滚轮缩放" style="position:fixed;touch-action:none;outline:none"></div>
 <script>
 window.setStickerStats=(q,t)=>{const a=document.getElementById('stat-left'),b=document.getElementById('stat-today');if(Number.isFinite(q))a.textContent=q;if(Number.isFinite(t))b.textContent=t};
@@ -261,6 +288,43 @@ boardRenderTop();boardRenderNext([]);boardRenderNow();
 setInterval(()=>{const n=curName.trim();if(!n||!curSince)return;const s=document.getElementById('board-cur-state');if(s)s.textContent='打印中 · 已用 '+fmtElapsed(Date.now()-curSince)},1000);
 const townShowDone=window.showPrintDone;
 window.showPrintDone=d=>{townShowDone(d);try{townAdd(d)}catch(e){}try{boardAdd(d)}catch(e){}};
+// 实时互动：进场/评论/礼物/关注逐条上屏，新观众一进来就能看到自己；时钟与本场计数同时证明画面是实时的。
+const FEED_TTL=30000,FEED_SHOW=5,FEED_KIND={join:'进入',comment:'评论',gift:'礼物',follow:'关注'};
+let feedItems=[],feedSeen=new Set(),feedLive=false,feedPrinted=0,feedUp=0,feedAt=0;
+function feedRender(){
+ const box=document.getElementById('feed-list');if(!box)return;
+ const now=Date.now();feedItems=feedItems.filter(x=>now-x.at<FEED_TTL).slice(-20);
+ box.textContent='';
+ if(!feedItems.length){const e=document.createElement('div');e.className='fi empty';e.textContent='等待新的互动 · 评论 888 上屏';box.append(e)}
+ else for(const x of feedItems.slice(-FEED_SHOW)){
+  const row=document.createElement('div');row.className='fi'+(x.fresh?' fresh':'');
+  const k=document.createElement('span');k.className='k '+(FEED_KIND[x.k]?x.k:'comment');k.textContent=FEED_KIND[x.k]||'互动';
+  const n=document.createElement('span');n.className='nm';n.textContent=x.n;
+  row.append(k,n);
+  if(x.g){const g=document.createElement('span');g.className='gd';g.textContent=x.g;row.append(g)}
+  const t=document.createElement('span');t.className='tm';t.textContent=new Date(x.at).toTimeString().slice(0,5);
+  row.append(t);box.append(row);
+ }
+ for(const x of feedItems)x.fresh=false;
+ const d=new Date(),clock=document.getElementById('feed-clock'),stat=document.getElementById('feed-stat'),live=document.getElementById('feed-live'),panel=document.getElementById('feed');
+ const alive=feedLive&&now-feedAt<10000;
+ if(clock)clock.textContent=[d.getHours(),d.getMinutes(),d.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
+ if(stat)stat.textContent='本场第 '+feedPrinted+' 件'+(feedUp>0?' · 已播 '+Math.floor(feedUp/60)+':'+String(feedUp%60).padStart(2,'0'):'');
+ if(live)live.textContent=alive?'直播中':'本地演示';
+ if(panel)panel.classList.toggle('off',!alive);
+}
+window.setFeedStats=m=>{
+ if(Array.isArray(m.recent))for(const r of m.recent){
+  const id=Number(r&&r.i)||0;if(!id||feedSeen.has(id))continue;feedSeen.add(id);
+  feedItems.push({id,k:String(r.k||'comment'),n:String(r.n||'观众').slice(0,12),g:String(r.g||'').replace(/[<>\n\r]/g,'').slice(0,8),at:Number(r.t)||Date.now(),fresh:true});
+ }
+ if(feedSeen.size>240)feedSeen=new Set(feedItems.map(x=>x.id));
+ if(Number.isFinite(m.printed))feedPrinted=Math.max(0,m.printed);
+ if(Number.isFinite(m.up))feedUp=Math.max(0,m.up);
+ feedLive=!!m.live;feedAt=Date.now();
+ feedRender();
+};
+setInterval(feedRender,1000);feedRender();
 // 贴纸可直接在 OBS「交互」或直播小窗里拖动/滚轮缩放/双击复位，位置按窗口各自记忆。
 (()=>{const setup=(el,key,editable)=>{if(!el)return;
 let l={dx:0,dy:0,scale:1};try{Object.assign(l,JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){}
@@ -289,6 +353,7 @@ setup(document.getElementById('guide'),'guide-layout',false);
 setup(document.getElementById('done'),'done-layout',false);
 setup(document.getElementById('town'),'town-layout',false);
 setup(document.getElementById('board'),'board-layout',false);
+setup(document.getElementById('feed'),'feed-layout',false);
 })();
 </script>
 <script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script>
@@ -326,7 +391,7 @@ function teardown() { inputChannel=null; if (pc) { try { pc.close() } catch (e) 
 let lastDoneId=0;
 bc.onmessage = async ev => {
   const m = ev.data || {};
-  if(m.type==='view-stats'&&Number.isFinite(m.queue)){window.setStickerStats(m.queue,m.today);window.setGuideNow(m.current,m.queue,m.next,m.eta);window.setBridgeState(!!m.live,m.lastAgo,m.demo);window.setBoardStats(m);
+  if(m.type==='view-stats'&&Number.isFinite(m.queue)){window.setStickerStats(m.queue,m.today);window.setGuideNow(m.current,m.queue,m.next,m.eta);window.setBridgeState(!!m.live,m.lastAgo,m.demo);window.setBoardStats(m);window.setFeedStats(m);
     if(m.done&&m.done.id&&m.done.id!==lastDoneId){lastDoneId=m.done.id;window.showPrintDone(m.done)}}
   else if(m.type==='view-queue-ack')window.showQueueAck(m);
   else if(m.type==='view-queue-miss')window.showQueueAck(m);
