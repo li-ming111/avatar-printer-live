@@ -1,0 +1,236 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI 头像工坊 · 直播画面</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#070b12;color:#eaf2ff;font-family:'Microsoft YaHei',sans-serif}
+body{background:radial-gradient(circle at 30% 20%,#12233a 0,#0a101b 46%,#060a10 100%)}
+.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(90,200,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(90,200,255,.05) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(circle at 50% 40%,#000 30%,transparent 78%)}
+header{position:relative;display:flex;align-items:center;justify-content:space-between;padding:22px 40px 0;z-index:2}
+.brand{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:800;letter-spacing:2px}
+.brand .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4de1ff,#7c6bff);box-shadow:0 0 24px rgba(77,225,255,.45);display:grid;place-items:center;font-size:19px;color:#04121b}
+.brand small{display:block;font-size:11px;letter-spacing:4px;color:#6f8ba8;font-weight:600;margin-top:3px}
+.state{display:flex;align-items:center;gap:10px;font-size:14px;color:#8fa8c2}
+.state .dot{width:9px;height:9px;border-radius:50%;background:#ffb057;box-shadow:0 0 10px rgba(255,176,87,.8)}
+.state.on .dot{background:#54ffc8;box-shadow:0 0 10px rgba(84,255,200,.85)}
+main{position:relative;z-index:2;display:grid;grid-template-columns:660px 1fr;gap:34px;padding:26px 40px 0;height:calc(100% - 100px)}
+.stage{position:relative;display:flex;flex-direction:column;align-items:center}
+.frame{position:relative;width:500px;height:500px;border-radius:30px;padding:5px;background:linear-gradient(145deg,rgba(77,225,255,.75),rgba(124,107,255,.35) 45%,rgba(255,206,84,.55));box-shadow:0 0 60px rgba(60,160,255,.18),inset 0 0 40px rgba(0,0,0,.5)}
+.inner{position:relative;width:100%;height:100%;border-radius:26px;overflow:hidden;background:radial-gradient(circle at 50% 45%,#152840,#070d16 70%);display:grid;place-items:center}
+.inner img{width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform 1.2s cubic-bezier(.2,.9,.3,1)}
+.inner::after{content:'';position:absolute;left:0;right:0;bottom:0;height:72px;background:linear-gradient(transparent,rgba(3,8,14,.55) 55%,rgba(3,8,14,.86));z-index:2;pointer-events:none}
+.inner img.show{opacity:1;transform:scale(1)}
+.ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#5f7d9c;transition:opacity .3s ease}
+.ph.hide{opacity:0}
+.rings{position:relative;width:150px;height:150px}
+.rings i{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(77,225,255,.5);animation:ring 2.6s ease-out infinite}
+.rings i:nth-child(2){animation-delay:.65s}.rings i:nth-child(3){animation-delay:1.3s}
+@keyframes ring{0%{transform:scale(.35);opacity:0}25%{opacity:.9}100%{transform:scale(1);opacity:0}}
+.rings b{position:absolute;inset:46px;border-radius:50%;background:linear-gradient(135deg,#4de1ff,#7c6bff);filter:blur(1px);opacity:.9}
+.ph span{font-size:17px;letter-spacing:2px}
+.ai-tag{position:absolute;right:10px;bottom:10px;min-width:152px;text-align:center;padding:6px 12px;border-radius:8px;background:rgba(4,10,18,.82);border:1px solid rgba(122,210,255,.45);color:#9fd8ff;font-size:13px;letter-spacing:1px;z-index:4}
+.progress{position:absolute;left:14px;right:176px;bottom:14px;height:6px;border-radius:99px;background:rgba(0,0,0,.45);overflow:hidden;z-index:3;opacity:0;transition:opacity .25s}
+.progress.show{opacity:1}
+.progress b{display:block;height:100%;width:0;background:linear-gradient(90deg,#4de1ff,#ffd15c);transition:width .3s ease}
+.caption{width:500px;margin-top:18px;text-align:center}
+.caption .name{font-size:30px;font-weight:800;letter-spacing:1px;min-height:38px}
+.caption .sub{font-size:16px;color:#8fa8c2;margin-top:6px;min-height:24px}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.cta{background:linear-gradient(135deg,rgba(24,38,58,.9),rgba(9,15,25,.9));border:1px solid rgba(122,210,255,.28);border-radius:18px;padding:20px 24px}
+.cta h2{margin:0 0 10px;font-size:26px;letter-spacing:1px}
+.cta h2 b{color:#ffd15c;font-size:30px}
+.cta p{margin:0;font-size:15px;line-height:1.7;color:#8fa8c2}
+.cta code{background:rgba(77,225,255,.12);border:1px solid rgba(77,225,255,.28);padding:2px 8px;border-radius:6px;color:#9fe8ff;font-family:inherit}
+.queue{flex:1;background:rgba(13,22,35,.72);border:1px solid rgba(122,210,255,.16);border-radius:18px;padding:16px 18px;overflow:hidden}
+.queue h3{margin:0 0 12px;font-size:14px;letter-spacing:3px;color:#6f8ba8;font-weight:700;display:flex;justify-content:space-between}
+.queue h3 b{color:#9fe8ff;letter-spacing:0}
+.qlist{display:flex;flex-direction:column;gap:9px}
+.qitem{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:12px;background:rgba(23,36,54,.72);border-left:3px solid rgba(77,225,255,.4);animation:qin .25s ease-out}
+.qitem.now{border-left-color:#ffd15c;background:rgba(46,36,15,.65)}
+.qitem .av{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#1d2c40;flex:none}
+.qitem .txt{min-width:0;flex:1}
+.qitem .txt b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qitem .txt span{font-size:12px;color:#7f9ab5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.qitem .pos{font-size:12px;color:#ffd15c;font-weight:700}
+@keyframes qin{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.empty{color:#4f6a85;font-size:14px;text-align:center;padding:26px 0;line-height:1.9}
+.stats{display:flex;gap:12px}
+.stat{flex:1;background:rgba(13,22,35,.72);border:1px solid rgba(122,210,255,.16);border-radius:14px;padding:12px 16px}
+.stat small{display:block;font-size:12px;color:#6f8ba8;letter-spacing:2px}
+.stat b{font-size:26px;color:#eaf6ff}
+footer{position:relative;z-index:2;height:70px;display:flex;align-items:center;justify-content:center;gap:26px;color:#7f9ab5;font-size:14px}
+footer .tip{color:#ffd15c}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:9;pointer-events:none}
+.toast div{padding:9px 18px;border-radius:10px;background:rgba(9,18,30,.92);border:1px solid rgba(122,210,255,.3);color:#cfe8ff;font-size:15px;animation:tin .25s ease-out}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.test{position:fixed;right:18px;bottom:10px;z-index:9;opacity:.18;background:none;border:0;color:#9fd8ff;font-size:12px;cursor:pointer}
+.test:hover{opacity:.85}
+</style></head><body>
+<div class="grid"></div>
+<header>
+  <div class="brand"><div class="mark">✦</div><div>AI 头像工坊<small>AI AVATAR STUDIO</small></div></div>
+  <div class="state on" id="state"><span class="dot"></span><span id="state-text">连接数据桥…</span></div>
+</header>
+<main>
+  <section class="stage">
+    <div class="frame"><div class="inner">
+      <div class="ph" id="ph"><div class="rings"><i></i><i></i><i></i><b></b></div><span id="ph-text">等待第一位观众</span></div>
+      <img id="pic" alt="">
+      <div class="ai-tag">AI 生成</div>
+      <div class="progress" id="bar"><b id="bar-fill"></b></div>
+    </div></div>
+    <div class="caption"><div class="name" id="cap-name">—</div><div class="sub" id="cap-sub">评论「手办」，用你的头像生成 3D 手办</div></div>
+  </section>
+  <aside class="side">
+    <div class="cta"><h2>评论 <b>手办</b> · 头像变 3D 手办</h2><p>例如：关注主播 或 评论 <code>手办</code> / <code>打印</code><br>用你的抖音头像生成，上屏后同款进打印队列。</p></div>
+    <div class="queue"><h3>生成队列 <b id="q-count">0</b></h3><div class="qlist" id="qlist"><div class="empty">队列空空的<br>发一条「手办」试试</div></div></div>
+    <div class="stats"><div class="stat"><small>已生成</small><b id="done-count">0</b></div><div class="stat"><small>排队中</small><b id="q-stat">0</b></div></div>
+  </aside>
+</main>
+<footer><span>头像由 AI 实时转成 3D 手办</span><span class="tip">评论触发 · 先到先做</span><span id="ai-state">生成服务连接中…</span></footer>
+<div class="toast" id="toast"></div>
+<button class="test" id="test">试生成</button>
+<script>
+const AI='http://127.0.0.1:8770';
+const $=id=>document.getElementById(id);
+const cooldown=60000,qmax=6,holdMs=9000;
+let ws,queue=[],doneCount=0,current=null,ready=null,genItem=null,pollTimer=0,holdTimer=0,reconnectTimer=0,lastByUser=new Map(),aiOK=false;
+try{doneCount=Number(localStorage.getItem('ai-done')||0)||0}catch(e){}
+$('done-count').textContent=doneCount;
+
+function toast(text){const box=$('toast'),el=document.createElement('div');el.textContent=text;box.append(el);while(box.children.length>3)box.firstChild.remove();setTimeout(()=>el.remove(),4200)}
+function wants(text){return /(手办|打印|头像|画|AI|ai)/.test(String(text||''))}
+function fmt(err){return err&&err.message?err.message:String(err)}
+
+async function health(){try{const r=await fetch(AI+'/health',{cache:'no-store'});const d=await r.json();aiOK=!!d.ok;$('ai-state').textContent=aiOK?('手办引擎正常'+(d.loaded?' · 模型已就绪':' · 首次生成需加载')):'生成服务异常';}catch(e){aiOK=false;$('ai-state').textContent='生成服务未启动（8770）'}}
+
+function connect(){try{ws=new WebSocket('ws://127.0.0.1:8765')}catch(e){schedule();return}
+ ws.onopen=()=>{$('state').classList.add('on');$('state-text').textContent='数据桥已连接';};
+ ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(err){return}if(m.type==='comment')onComment(m);else if(m.type==='follow')onFollow(m)};
+ ws.onclose=()=>{$('state-text').textContent='数据桥断开 · 自动重连';$('state').classList.remove('on');schedule()};
+ ws.onerror=()=>{}}
+function schedule(){clearTimeout(reconnectTimer);reconnectTimer=setTimeout(connect,3000)}
+
+function onComment(m){if(!m||!m.avatar)return;if(!wants(m.text))return;enqueue(m.name||'观众',m.avatar)}
+function onFollow(m){if(!m||!m.avatar)return;enqueue(m.name||'观众',m.avatar)}
+
+function enqueue(name,avatar){
+ const key=String(name).trim();
+ const last=lastByUser.get(key)||0;
+ if(Date.now()-last<cooldown){toast(key+' 的手办刚做过，稍后再来');return}
+ if(queue.length>=qmax){toast('队列已满，稍后再做');return}
+ lastByUser.set(key,Date.now());
+ queue.push({name:key,avatar,at:Date.now()});
+ renderQueue();
+ if(current||genItem)toast(key+' 已加入 · 马上用头像捏手办');
+ pump();
+}
+
+function renderQueue(){
+ $('q-count').textContent=queue.length;$('q-stat').textContent=queue.length;
+ const list=$('qlist');list.innerHTML='';
+ if(!queue.length&&!current){list.innerHTML='<div class="empty">队列空空的<br>发一条「手办」试试</div>';return}
+ if(current)list.append(qrow(current,true,0));
+ queue.slice(0,5).forEach((it,i)=>list.append(qrow(it,false,i+1)));
+}
+function qrow(it,isNow,pos){
+ const el=document.createElement('div');el.className='qitem'+(isNow?' now':'');
+ const img=document.createElement('img');img.className='av';img.alt='';
+ if(it.avatar)img.src=it.avatar;else img.src=dataAvatar(it.name);
+ const txt=document.createElement('div');txt.className='txt';
+ const b=document.createElement('b');b.textContent=it.name;
+ const s=document.createElement('span');
+ s.textContent=isNow?'3D 手办 · 已上屏':(it===genItem?'正在用头像捏手办…':'排队中');
+ txt.append(b,s);
+ const p=document.createElement('div');p.className='pos';p.textContent=isNow?'●':'#'+pos;
+ el.append(img,txt,p);return el;
+}
+function dataAvatar(name){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');let h=0;for(const ch of String(name))h=(h*31+ch.charCodeAt(0))>>>0;const pal=['#4de1ff','#7c6bff','#ffd15c','#ff8f6b','#54ffc8'];x.fillStyle=pal[h%pal.length];x.fillRect(0,0,64,64);x.fillStyle='#08121c';x.font='700 30px "Microsoft YaHei"';x.textAlign='center';x.textBaseline='middle';x.fillText(String(name).slice(0,1)||'客',32,34);return c.toDataURL()}
+
+function pump(){
+ if(ready&&!current){displayReady();return}
+ if(!genItem&&!ready&&queue.length){startGen(queue[0]);return}
+ if(!current&&!genItem&&!queue.length&&!ready)showIdle();
+}
+function showIdle(){
+ $('ph-text').textContent='等待下一位观众';
+ $('cap-name').textContent='—';$('cap-sub').textContent='评论「手办」，用你的头像生成 3D 手办';
+ $('bar').classList.remove('show');$('ph').classList.remove('hide');$('pic').classList.remove('show');
+}
+function startGen(item){
+ genItem=item;
+ if(!current){
+  $('cap-name').textContent=item.name;
+  $('cap-sub').textContent='头像 → 3D 手办';
+  $('ph-text').textContent='正在用头像捏 3D 手办…';
+  $('ph').classList.remove('hide');$('pic').classList.remove('show');
+  $('bar').classList.add('show');$('bar-fill').style.width='8%';
+ }
+ fetch(AI+'/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:item.name,avatar:item.avatar})})
+  .then(async r=>{
+   if(r.status===429)throw new Error('AI 队列已满');
+   if(!r.ok){let e='';try{e=(await r.json()).error||''}catch(x){}throw new Error(e||('生成服务 '+r.status))}
+   const job=await r.json();
+   if(job.state==='done')genDone(job);else poll(job.id);
+  })
+  .catch(e=>failGen(fmt(e)));
+}
+function poll(id){
+ clearTimeout(pollTimer);
+ pollTimer=setTimeout(async()=>{
+  try{
+   const r=await fetch(AI+'/status?id='+encodeURIComponent(id),{cache:'no-store'});
+   if(!r.ok)throw new Error('状态 '+r.status);
+   const job=await r.json();
+   if(job.state==='done'){genDone(job);return}
+   if(job.state==='error'){failGen(job.error||'生成失败');return}
+   if(!current){
+    const pct=job.total?Math.max(8,Math.round((job.step||0)/job.total*100)):10;
+    $('bar-fill').style.width=pct+'%';
+    $('ph-text').textContent=job.pos>1?('排队第 '+job.pos+' 位…'):'正在用头像捏 3D 手办…';
+   }
+   poll(id);
+  }catch(e){failGen('状态查询失败')}
+ },500);
+}
+function genDone(job){
+ const item=genItem;if(!item)return;
+ queue=queue.filter(x=>x!==item);
+ genItem=null;ready={item,job};
+ renderQueue();
+ if(!current){displayReady()}
+}
+function failGen(msg){
+ if(genItem){toast(genItem.name+'：'+msg);queue=queue.filter(x=>x!==genItem)}
+ genItem=null;
+ renderQueue();
+ setTimeout(()=>{if(!current&&!genItem&&!ready)showIdle();pump()},800);
+}
+function displayReady(){
+ const it=ready.item,job=ready.job;ready=null;
+ current=it;renderQueue();
+ $('cap-name').textContent=it.name;
+ $('cap-sub').textContent='头像 → 3D 手办';
+ const img=$('pic');
+ img.classList.remove('show');
+ img.onload=()=>{$('ph').classList.add('hide');img.classList.add('show');$('bar').classList.remove('show')};
+ img.onerror=()=>{toast('图片加载失败');finishCurrent(false)};
+ img.src=AI+job.url+'&t='+Date.now();
+ doneCount++;try{localStorage.setItem('ai-done',doneCount)}catch(e){}
+ $('done-count').textContent=doneCount;
+ clearTimeout(holdTimer);
+ holdTimer=setTimeout(()=>finishCurrent(true),holdMs);
+ pump();
+}
+function finishCurrent(ok){
+ clearTimeout(holdTimer);
+ current=null;
+ $('bar').classList.remove('show');
+ if(!ok){$('ph-text').textContent='等待下一位观众';$('ph').classList.remove('hide');$('pic').classList.remove('show')}
+ renderQueue();
+ setTimeout(pump,600);
+}
+
+$('test').onclick=()=>enqueue('试做观众'+Math.floor(Math.random()*90+10),AI+'/sample');
+setInterval(health,5000);health();
+connect();
+window.addEventListener('beforeunload',()=>{try{ws&&ws.close()}catch(e){}});
+</script>
+</body></html>

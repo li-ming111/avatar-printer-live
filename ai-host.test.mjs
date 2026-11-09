@@ -1,0 +1,13 @@
+import {GiftSpeech} from './gift-speech.mjs';import assert from 'node:assert/strict';
+const s=new GiftSpeech();let lines=[];s.enqueue=t=>lines.push(t);s.unlocked=true;
+s.done('小明',88);assert.equal(lines.length,1);assert.ok(lines[0].includes('小明'));assert.ok(lines[0].includes('88'));
+s.comment('小红','这头像好可爱');assert.equal(lines.length,2);assert.ok(lines[1].includes('小红'));
+s.comment('小刚','888');assert.equal(lines.length,2);
+s.lastCommentAt=0;s.comment('小刚','888');assert.equal(lines.length,3);assert.ok(lines[2].includes('小刚'));
+s.speaking=true;s.lastCommentAt=0;s.comment('小美','你好');assert.equal(lines.length,3);
+s.speaking=false;
+s.lastIdleAt=0;s.idle({queue:2});assert.equal(lines.length,4);assert.ok(/排队|888/.test(lines[3]));
+s.lastIdleAt=Date.now();s.idle({queue:1});assert.equal(lines.length,4);
+s.lastSpeakAt=Date.now();s.lastIdleAt=0;s.idle({queue:1});assert.equal(lines.length,4);
+s.lastSpeakAt=0;s.aiEnabled=false;s.lastIdleAt=0;s.idle({queue:1});assert.equal(lines.length,4);
+console.log('PASS: AI host done/comment/idle with throttle, backlog and toggle');

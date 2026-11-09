@@ -1,0 +1,56 @@
+# ===== 登录态与浏览器配置（含 Cookie/会话，绝不上传）=====
+.bridge-profile/
+.live-webview-profile/
+.printer-webview-profile/
+.scene-webview-profile/
+
+# ===== 运行状态与日志（含观众昵称、弹幕、房间号）=====
+*.log
+.bridge-room
+__pycache__/
+
+# ===== 内部验收记录（含真实观众昵称与头像链接）=====
+avatar-acceptance.json
+AVATAR-ACCEPTANCE.md
+TEST-REPORT.md
+
+# ===== 本地参考图片（不发布）=====
+storyboard.jpg
+reference.jpg
+
+# ===== 头像持久缓存与协议探针产物（含观众昵称，不发布）=====
+avatar-cache.json
+ws-samples/
+live-acceptance.log
+
+# ===== 发布压缩包（不入库）=====
+*.zip
+
+.err-check/
+.popup-test/
+.diag-profile/
+popup-test-result.json
+
+.output-test/
+.capture-compat*
+
+# ===== 本地 AI 服务与模型（数 GB，不入库；ai-live.html 需另配 8770 服务）=====
+ai/
+
+# ===== 旧版本、备份与停止维护的分支 =====
+backup-20261103/
+down-jacket/
+*.bak
+*.bak-*
+index.previous.html
+.syn.js
+
+# ===== 依赖与系统垃圾 =====
+node_modules/
+Thumbs.db
+.DS_Store
+
+# ===== 本地密钥（如有）=====
+.env
+*.pem
+*.key

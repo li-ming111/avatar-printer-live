@@ -1,0 +1,9 @@
+export const RULES={like:{count:1,size:'small',label:'点赞'},heart:{count:3,size:'large',priority:true,label:'小心心'},beer:{count:1,size:'large',priority:true,label:'啤酒'},rose:{count:10,size:'large',priority:true,label:'玫瑰'},lollipop:{count:99,size:'large',priority:true,label:'棒棒糖'},other:{count:1,size:'large',priority:true,label:'礼物'}};
+// 队列上限给单次 99 张的礼物留出空间，同时挡住无限堆积。
+export const QUEUE_CAP=120;
+// 同一观众按互动类型冷却，避免连刷把队列顶满。
+export const COOLDOWN_MS={评论:60000,点赞:10000,关注:60000,进场:60000};
+export class DemoRules{
+ constructor(){this.queue=[];this.likes=new Map();this.seen=new Set();this.follows=new Set();this.lastByUser=new Map()}
+ event(type,user,id,amount=1,options={},meta={}){if(!RULES[type])throw Error('未知规则');if(!user?.name)throw Error('缺少用户');if(!Number.isInteger(amount)||amount<1||amount>100)throw Error('演示单次数量应为1到100');if(id&&this.seen.has(id))return {added:0,duplicate:true};const name=String(user.name).trim().slice(0,40),source=String(meta.source||''),cooldown=COOLDOWN_MS[source]||0;if(cooldown){const key=source+'|'+name,last=this.lastByUser.get(key)||0,now=Date.now();if(now-last<cooldown)return {added:0,cooldown:true};this.lastByUser.set(key,now);if(this.lastByUser.size>800)for(const[k,t]of this.lastByUser)if(now-t>cooldown*5)this.lastByUser.delete(k)}if(id)this.seen.add(id);const rule={...RULES[type],...options},room=QUEUE_CAP-this.queue.length;if(room<=0)return {added:0,full:true};const wanted=Math.min(99,rule.count*amount),count=Math.min(wanted,room);const jobs=Array.from({length:count},(_,i)=>({...user,size:rule.size,priority:!!rule.priority,source:rule.label,copy:i+1,total:count}));let index=this.queue.length;if(rule.priority){index=this.queue.findIndex(j=>!j.priority);if(index<0)index=this.queue.length}this.queue.splice(index,0,...jobs);return {added:count,size:rule.size,index,jobs,full:count<wanted}}
+}

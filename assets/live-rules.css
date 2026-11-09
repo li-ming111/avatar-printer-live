@@ -1,0 +1,12 @@
+.live-rules{color:#ffe327;font:800 27px/1.25 "Microsoft YaHei",sans-serif;margin-top:12px;text-shadow:0 1px 1px #8c6800}.live-rules .rule-row{display:flex;align-items:center;gap:10px;min-height:58px}.live-rules .rule-row img{width:48px;height:48px;object-fit:contain;flex:none}.live-rules .comment-rule{font-size:23px;flex-wrap:wrap;gap:2px 8px}.live-rules .comment-rule b{font-size:24px;margin-right:0}.live-rules .comment-rule span{font-size:21px}
+.print-setting-group{margin:0;padding:12px;border:1px solid #303a49;border-radius:8px;background:#101620;min-width:0}
+.print-setting-group h4{margin:0 0 10px;color:#ffbc79;font-size:13px;letter-spacing:.5px}
+.print-setting-card{padding:8px 0;border-bottom:1px solid #26303d}.print-setting-card:last-child{border-bottom:0}
+#print-rules-body .print-setting-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:7px 0;color:#e2e8f0;line-height:1.5}
+#print-rules-body .print-setting-toggle span{flex:1;min-width:0}
+#print-rules-body input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;margin:0;padding:0;accent-color:#ff6852;cursor:pointer}
+.print-setting-toggle small{display:block;color:#8999ac;font-size:11px;font-weight:normal;margin-top:3px}
+.print-setting-field{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0;color:#adbbcc;font-size:12px}
+.print-setting-field select{width:104px;max-width:55%;min-width:0;padding:6px 8px;border:1px solid #384559;border-radius:6px;background:#1a2432;color:#eef3fa}
+.print-setting-note{font-size:11px;line-height:1.7;color:#8a9aad;margin:4px 0}
+#print-rules-body{gap:10px!important}#print-rules summary{line-height:1.6}

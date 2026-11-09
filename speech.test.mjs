@@ -1,0 +1,1 @@
+import {GiftSpeech} from './gift-speech.mjs';import assert from 'node:assert/strict';let s=new GiftSpeech(),previous='';for(let i=0;i<100;i++){let t=s.text('小熊','啤酒',1);assert.ok(t.includes('小熊')&&t.includes('1个啤酒'));assert.notEqual(t,previous);previous=t}console.log('PASS: 100 speech templates, correct donor/gift count, no adjacent repeats');

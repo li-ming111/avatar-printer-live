@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>功能介绍 · 志哥AI 头像打印机</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0e14;color:#f4f5f7;font:14px/1.9 'Microsoft YaHei',sans-serif}
+/* 平铺水印 */
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.045;
+ background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='170'%3E%3Ctext x='14' y='92' font-size='21' fill='%237aa6d8' font-family='Microsoft YaHei' transform='rotate(-18 14 92)'%3E%E5%BF%97%E5%93%A5AI%C2%B7%E5%BC%80%E6%BA%90%E5%85%8D%E8%B4%B9%3C/text%3E%3C/svg%3E")}
+/* 固定角标水印 */
+.wm{position:fixed;right:16px;bottom:14px;z-index:9998;pointer-events:none;font:700 13px 'Microsoft YaHei';color:#9fc3e8;opacity:.62;letter-spacing:2px;background:#0b0e14d9;padding:5px 12px;border:1px solid #303642;border-radius:99px}
+header{position:sticky;top:0;z-index:10;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 22px;background:#171c24ee;border-bottom:1px solid #303642;backdrop-filter:blur(6px)}
+.brand{font:700 17px 'Microsoft YaHei';letter-spacing:1px}
+.brand b{color:#67efff}
+.free{font-size:12px;font-weight:700;color:#ffe0be;background:#4a3930;border:1px solid #c99b70;border-radius:99px;padding:3px 12px}
+nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+nav a{color:#c8cfd8;text-decoration:none;font-size:13px;padding:6px 12px;border:1px solid #303642;border-radius:8px;background:#272e38}
+nav a:hover{color:#67efff;border-color:#67efff55}
+nav a.on{color:#67efff;border-color:#67efff88}
+main{max-width:1060px;margin:0 auto;padding:30px 20px 80px}
+.hero{text-align:center;padding:26px 10px 8px}
+.hero h1{font-size:30px;margin:8px 0 10px;letter-spacing:1px}
+.hero h1 b{color:#67efff}
+.hero p{color:#a9b1bb;margin:6px auto;max-width:760px}
+.notice{margin:18px auto 0;max-width:760px;border:1px solid #c99b7066;background:#1d1a14;border-radius:12px;padding:14px 18px;color:#ffe0be;font-size:14px}
+.notice b{font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:30px}
+.card{background:#171c24;border:1px solid #303642;border-radius:14px;padding:18px 20px}
+.card h3{margin:0 0 8px;font-size:16px;color:#e8eef6}
+.card h3 span{color:#67efff;margin-right:8px}
+.card p,.card li{color:#b9c6d6;font-size:13px;margin:4px 0}
+.card ul{margin:6px 0 0;padding-left:18px}
+.card .hl{color:#7fd69a}
+h2.sec{margin:44px 0 4px;font-size:21px;color:#e8eef6}
+h2.sec small{color:#67efff;font-size:13px;margin-left:10px}
+footer{border-top:1px solid #303642;margin-top:50px;padding:22px;text-align:center;color:#8f9bab;font-size:12px;line-height:2}
+footer b{color:#9fc3e8}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><b>▧</b> 志哥AI · 头像打印机</div>
+ <span class="free">完全开源 · 免费使用</span>
+ <nav>
+  <a class="on" href="./features.html">功能介绍</a>
+  <a href="./guide.html">使用教程</a>
+  <a href="./index.html">打开打印台</a>
+ </nav>
+</header>
+
+<main>
+ <div class="hero">
+  <h1>把直播间观众的头像，<b>真的打印出来</b></h1>
+  <p>一款把直播间观众头像真实「打印」出来的 3D 直播互动软件：观众评论、点赞、送礼，3D 打印机就把 TA 的头像逐层打印、打分、转运上横向传送带。接入真实直播间数据，也支持离线演示模式。</p>
+  <div class="notice"><b>开源免费声明：</b>本软件整体<b>完全开源、免费使用</b>——可自由下载、安装、使用、修改和分享，无需付费、无需授权。请遵守平台规则，仅用于正当的直播互动娱乐。</div>
+ </div>
+
+ <h2 class="sec">核心功能 <small>FEATURES</small></h2>
+ <div class="grid">
+  <div class="card"><h3><span>🖨</span>3D 打印现场</h3>
+   <ul><li>Three.js 手工几何重建：黑色龙门架、蓝色喷头、四色线盘、送料管、机械臂、圆形头像底座、横向传送带</li>
+   <li>逐层打印 → 娱乐评分 → 出分动画 → 机械臂抓取转运，前方成品与后方打印并行</li>
+   <li>视角可自由拖动，随时检查模型细节</li></ul></div>
+
+  <div class="card"><h3><span>📡</span>真实直播接入（数据桥）</h3>
+   <ul><li>自动读取抖音直播间的<span class="hl">公开弹幕</span>：评论、点赞、礼物、进场、关注</li>
+   <li>0.3 秒高频采集 + 协议流解码，评论/礼物/点赞秒级触发打印</li>
+   <li>礼物插队最前、评论排在点赞之前、点赞高峰自动限流防刷屏</li>
+   <li>一键双窗口：直播间登录窗口与打印程序并排运行</li></ul></div>
+
+  <div class="card"><h3><span>📋</span>事件规则（与直播间规则牌一致）</h3>
+   <ul><li>评论（默认只认含 888 的发言，关键词可改）→ 1 张小图</li>
+   <li>点赞 → 1 赞 1 张小图，<span class="hl">每个点赞都带真实昵称和头像</span>（花名册交错轮换，绝不匿名）</li>
+   <li>关注 → 1 张大图；爱心 → 3 张大图；啤酒 → 1 张大图；玫瑰 → 10 张大图；棒棒糖 → 99 张大图；其他礼物 → 1 张大图</li>
+   <li>进场 → 语音欢迎播报，不占打印队列</li></ul></div>
+
+  <div class="card"><h3><span>🪪</span>头像采集引擎</h3>
+   <ul><li>多来源采集：观众列表、贡献条、进出场记录持续累积</li>
+   <li>点击昵称资料卡补取：<span class="hl">每个昵称最多 3 轮、昵称上多点轮换（靠左/居中/靠右）</span></li>
+   <li>点开资料卡后最多等 4 秒让头像图片读取完成，每轮结束到评论区点一下清卡再换位置重试</li>
+   <li>6 秒后可再次尝试；无人发言时每 45 秒自动补点最近活跃观众</li>
+   <li>实在拿不到的观众自动生成彩色首字头像，绝不出现灰色占位</li></ul></div>
+
+  <div class="card"><h3><span>🧊</span>冷场保护</h3>
+   <ul><li>连续 <span class="hl">30 秒</span>没有任何观众消息时，自动补一张测试头像继续演出</li>
+   <li>之后每 30 秒最多补一张、队列最多预留 2 张，不积压</li>
+   <li>真实消息一到，立刻让位，真人优先</li></ul></div>
+
+  <div class="card"><h3><span>🎬</span>镜头与画质系统</h3>
+   <ul><li>最多保存 10 个命名镜头，点击切换</li>
+   <li>随手拖动的视角和上次使用的镜头<span class="hl">自动记忆</span>，刷新自动回到上次机位</li>
+   <li>「初始视角」一键回位；画质四档：标准 / 2×精细 / 4×超清 / 8×影院（反射与阴影同步升档）</li>
+   <li>打印状态牌可显示/隐藏，选择自动记忆</li></ul></div>
+
+  <div class="card"><h3><span>🔊</span>声音与语音播报</h3>
+   <ul><li>打印机启动、逐层挤出、完成、传送全程音效</li>
+   <li>礼物插队时<span class="hl">语音播报</span>观众昵称与礼物名</li>
+   <li>进场欢迎语，100+ 条模板不重复、不连播</li></ul></div>
+
+  <div class="card"><h3><span>📊</span>数据面板与记录</h3>
+   <ul><li>直播连接面板：连接状态、房间直达链接、点赞/评论/礼物实时计数、抓取状态</li>
+   <li>打印队列：等待人数、插队标记、大小图标注</li>
+   <li>打印记录：每位已打印观众的昵称、头像、触发方式、大小、分数和时间</li></ul></div>
+
+  <div class="card"><h3><span>🖥</span>桌面版与竖屏直播窗</h3>
+   <ul><li>WebView2 独立桌面应用，双击即用</li>
+   <li>「弹出直播窗口」得到 <span class="hl">1080×1920 竖屏</span>画面，OBS 窗口采集直接用</li>
+   <li>页面隐藏时打印由后台时钟继续推进，切回自动恢复</li></ul></div>
+
+  <div class="card"><h3><span>🧪</span>演示与测试模式</h3>
+   <ul><li>不连直播也能玩：内置 8 个测试头像 + 12 张截图整理头像，随机演示</li>
+   <li>规则演示台：评论/爱心/啤酒/棒棒糖按钮逐条验证规则</li>
+   <li>演示速度 1× / 4× / 12× 快速验收；支持批量导入本地头像素材</li></ul></div>
+
+  <div class="card"><h3><span>🔒</span>隐私与合规</h3>
+   <ul><li>只读取<span class="hl">公开弹幕</span>与公开头像，不登录账号、不发弹幕、不赠送礼物</li>
+   <li>所有数据仅在本机处理，不上传任何服务器</li>
+   <li>评分为娱乐随机分数（60–95 分），对应不同打印材质，仅供互动</li></ul></div>
+ </div>
+
+ <footer>
+  <b>志哥AI</b> 出品 · 头像打印机 AVATAR PRINT STUDIO<br>
+  本软件完全开源、免费使用 · 请遵守直播平台规则，仅用于正当互动娱乐<br>
+  <a href="./guide.html" style="color:#67efff">查看完整使用教程 →</a>
+ </footer>
+</main>
+<div class="wm">志哥AI</div>
+</body>
+</html>
