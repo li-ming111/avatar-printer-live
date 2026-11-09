@@ -5,7 +5,30 @@
 
 ## 运行
 
-环境要求：Windows 10/11、Python 3（桌面版另需 `pywebview` 和 WebView2 Runtime）、Node.js（数据桥）。抖音数据桥依赖本机 Chrome/Edge 的调试端口，语音播报使用 Windows 自带的 SAPI。
+### 环境要求
+
+仅支持 **Windows 10 / 11（64 位）**：桌面壳基于 WebView2，语音播报用系统 SAPI，抖音数据桥通过本机浏览器的调试端口抓取弹幕。
+
+| 组件 | 版本 | 用途 |
+| --- | --- | --- |
+| Python | 3.9 及以上（实测 3.12.10） | 桌面壳与本地 HTTP 服务 `launch.py` |
+| pywebview | 5.0 及以上（实测 6.2.1） | 桌面窗口；5.0 起才有 `FileDialog` 和 `REMOTE_DEBUGGING_PORT` |
+| WebView2 Runtime | 微软 Evergreen 运行时 | pywebview 的渲染内核；Win11 自带，Win10 多数已随 Edge 安装 |
+| Node.js | 18 及以上（实测 24.11.1） | 只跑数据桥 `douyin-bridge.mjs`，仅用内置模块，无需 `npm install` |
+| Edge 或 Chrome | 任意近期版本 | 网页版「直播间窗口」「独立场景窗口」和调试端口（9223 / 9222） |
+| 中文语音 | Windows 自带 SAPI | 礼物与进场语音播报；系统默认嗓音即可 |
+| OBS Studio | 自带浏览器源 | 采集 `live-view.html` 输出到直播伴侣，非本软件必需 |
+
+安装依赖（只需 Python 这一项；Node.js 与 WebView2 Runtime 从官网装 MSI/开机自带的安装包）：
+
+```bat
+pip install "pywebview>=5"
+```
+
+- WebView2 Runtime：<https://developer.microsoft.com/microsoft-edge/webview2/>（Evergreen Bootstrapper）
+- Node.js：<https://nodejs.org/>（LTS 即可）
+
+### 启动
 
 ```bat
 start.bat          :: 启动本地服务并打开桌面窗口（日常使用）
@@ -13,7 +36,7 @@ start-all.bat      :: 等同 start.bat（保留旧入口）
 start-bridge.bat   :: 只启动数据桥，适合命令行单独跑；也可以在桌面窗口里点「开始抓取」
 ```
 
-只想要网页版：`python launch.py --server-only`，再打开 http://127.0.0.1:8080 。必须通过 HTTP 访问，直接双击 HTML 会因 ES modules 限制得到空白页。Three.js、贴图、音效都在 `assets/`，演示头像由 Canvas 生成，首次运行不需要联网。
+只想要网页版：`python launch.py --server-only`（无需 pywebview，仍需 Python 3.9+），再打开 http://127.0.0.1:8080 。必须通过 HTTP 访问，直接双击 HTML 会因 ES modules 限制得到空白页。Three.js、贴图、音效都在 `assets/`，演示头像由 Canvas 生成，首次运行不需要联网。端口固定：HTTP 8080、数据桥 WebSocket 8765、直播间调试 9224，被占用时启动会报错。
 
 功能介绍见 http://127.0.0.1:8080/features.html ，完整使用教程见 http://127.0.0.1:8080/guide.html （打印台顶部也有入口）。本软件完全开源、免费使用，由 志哥AI 出品。
 
@@ -70,4 +93,4 @@ scene_relay.py               独立进程之间的信令中继
 
 
 ## WebView2 桌面版
-start.bat 和 start-all.bat 现在均启动独立 WebView2 应用。填写房间号，打开直播间窗口并登录，再点击开始抓取。停止抓取会停止本应用的数据桥；关闭主窗口会清理本应用启动的登录窗口和数据桥。首次使用请关闭旧版 ServerGuard、BridgeGuard 及旧数据桥，以免占用端口。新窗口使用独立登录配置，需重新登录。依赖：Python、pywebview、WebView2 Runtime 和 Node.js。
+start.bat 和 start-all.bat 现在均启动独立 WebView2 应用。填写房间号，打开直播间窗口并登录，再点击开始抓取。停止抓取会停止本应用的数据桥；关闭主窗口会清理本应用启动的登录窗口和数据桥。首次使用请关闭旧版 ServerGuard、BridgeGuard 及旧数据桥，以免占用端口。新窗口使用独立登录配置，需重新登录。依赖版本见上方「环境要求」（Python 3.9+、pywebview 5+、WebView2 Runtime、Node.js 18+）。
